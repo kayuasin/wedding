@@ -35,7 +35,7 @@ const request = (method, path) => {
 
     let url = document.querySelector('body').getAttribute('data-url');
     let req = {
-        method: method,
+        method: method.toUpperCase(),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ const util = (() => {
             .replace(/'/g, '&#039;');
     };
 
-    const salin = (btn, msg = 'Tersalin', timeout = 1500) => {
+    const salin = (btn, msg = 'Copied', timeout = 2000) => {
         navigator.clipboard.writeText(btn.getAttribute('data-nomer'));
 
         let tmp = btn.innerHTML;
@@ -228,15 +228,23 @@ const util = (() => {
         window.scrollTo(0, 0);
     };
 
+    const animate = (svg, timeout, classes) => {
+        let handler = null;
+
+        handler = setTimeout(() => {
+            svg.classList.add(classes);
+            handler = null;
+        }, timeout);
+    };
+
     return {
         buka,
-        tamu,
         modal,
         music,
         salin,
         escapeHtml,
-        opacity,
-        show
+        show,
+        animate
     };
 })();
 
@@ -494,10 +502,10 @@ const comment = (() => {
 
     const convertMarkdownToHTML = (input) => {
         return input
-            .replace(/\*(?=\S)(.*?)(?<!\s)\*/g, '<strong class="text-dark">$1</strong>')
-            .replace(/\_(?=\S)(.*?)(?<!\s)\_/g, '<em class="text-dark">$1</em>')
-            .replace(/\~(?=\S)(.*?)(?<!\s)\~/g, '<del class="text-dark">$1</del>')
-            .replace(/\`\`\`(?=\S)(.*?)(?<!\s)\`\`\`/g, '<code class="font-monospace text-dark">$1</code>');
+            .replace(/\*(?=\S)(.*?)(?<!\s)\*/s, '<strong class="text-dark">$1</strong>')
+            .replace(/\_(?=\S)(.*?)(?<!\s)\_/s, '<em class="text-dark">$1</em>')
+            .replace(/\~(?=\S)(.*?)(?<!\s)\~/s, '<del class="text-dark">$1</del>')
+            .replace(/\`\`\`(?=\S)(.*?)(?<!\s)\`\`\`/s, '<code class="font-monospace text-dark">$1</code>');
     };
 
     const resetForm = () => {
@@ -903,22 +911,17 @@ const comment = (() => {
         let tmp = button.innerText;
         button.innerText = 'Loading..';
 
-        let isSuccess = false;
         await request('DELETE', '/api/comment/' + owns.get(id))
             .token(token)
             .then((res) => {
                 if (res.data.status) {
                     owns.unset(id);
-                    isSuccess = true;
+                    document.getElementById(id).remove();
                 }
             })
             .catch((err) => {
                 alert(`Terdapat kesalahan: ${err}`);
             });
-
-        if (isSuccess) {
-            ucapan();
-        }
 
         button.innerText = tmp;
         button.disabled = false;
