@@ -83,6 +83,21 @@
             }
         }
     </script>
+		    <script type="text/javascript">
+        window.onload = function () {
+            // Set your target string (e.g., "undangan")
+            var stringToContain = "pernikahan";
+            var url = window.location.href;
+
+            if (url.indexOf(stringToContain) >= 0) {
+                // If the URL contains the specified string, hide the divs
+                var divsToHide = document.getElementsByClassName("hadiahgift");
+                for (var i = 0; i < divsToHide.length; i++) {
+                    divsToHide[i].style.display = 'block';
+                }
+            }
+        }
+    </script>
 </head>
 
 <body data-email="user@example.com" data-password="12345678"  style="overflow-y: hidden;" > <!--data-url="https://api.ulems.my.id/"-->
@@ -114,7 +129,7 @@
                     <span class="d-block" style="font-size: 0.7rem;">Gallery</span>
                 </a>
             </li>
-            <li class="nav-item hadiahgift">
+            <li class="nav-item hadiahgift" style="display: none;">
                 <a class="nav-link" href="#gifts">
                     <i class="fa-solid fa-gift"></i>
                     <span class="d-block" style="font-size: 0.7rem;">Gifts</span>
@@ -431,7 +446,7 @@
         </svg>
 
         <!-- Hadiah -->
-        <div class="container hadiahgift" id="gifts" >
+        <div class="container hadiahgift" id="gifts" style="display:none;">
             <div class="py-4">
 
                 <div class="text-center">
